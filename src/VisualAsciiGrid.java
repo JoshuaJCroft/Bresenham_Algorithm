@@ -3,7 +3,7 @@
 */
 public class VisualAsciiGrid {
 
-    private final int MAX = 10;
+    final static int MAX = 10;
     private final char LINE_CHARACTER = '#';
 
     private int range;
