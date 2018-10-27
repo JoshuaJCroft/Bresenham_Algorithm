@@ -9,11 +9,8 @@ Description:    The program takes in input for an x and a y (double) representin
                 The default range is [-10,10] in both axis.
 */
 public class Main {
-
-    // TODO: Add user input
     public static void main(String args[]) {
-        VisualAsciiGrid grid = new VisualAsciiGrid();
-        grid.applyLineFromOrigin(-5, 10);
-        grid.draw();
+        Simulation sim = new Simulation();
+        sim.run();
     }
 }
