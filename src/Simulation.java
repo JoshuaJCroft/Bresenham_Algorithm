@@ -14,15 +14,16 @@ public class Simulation {
     // Method Name: run
     // Behaviour:
     public void run() {
-        Double input;
+        Integer input;
         Boolean answer;
-        double xEndPoint, yEndPoint;
+        int xEndPoint, yEndPoint, zEndPoint;
+        Line3D line;
         while(true) {
             System.out.println("Please enter an end-point for a line from the origin ...");
             input = null;
             while(input == null) {
                 System.out.print("X: ");
-                input = getDoubleInput();
+                input = getIntegerInput();
                 if(input != null && input > this.maximum) {
                     input = null;
                 }
@@ -31,20 +32,30 @@ public class Simulation {
             input = null;
             while(input == null) {
                 System.out.print("Y: ");
-                input = getDoubleInput();
+                input = getIntegerInput();
                 if(input != null && input > this.maximum) {
                     input = null;
                 }
             }
             yEndPoint = input;
+            input = null;
+            while(input == null) {
+                System.out.print("Z: ");
+                input = getIntegerInput();
+                if(input != null && input > this.maximum) {
+                    input = null;
+                }
+            }
+            zEndPoint = input;
             grid = new VisualAsciiGrid();
-            grid.applyLineFromOrigin(xEndPoint, yEndPoint);
+            line = new Line3D(xEndPoint, yEndPoint, zEndPoint);
+            grid.applyLine3D(line);
             grid.draw();
             System.out.println("Would you like to try again?");
             answer = null;
             while(answer == null) {
                 answer = getYesOrNo();
-                if (!answer) {
+                if (answer != null && !answer) {
                     System.exit(0);
                 }
             }
@@ -64,12 +75,12 @@ public class Simulation {
         }
     }
 
-    // Behaviour:   Returns Double instance representation of user input. Returns null if user input is invalid.
-    private Double getDoubleInput() {
+    // Behaviour:   Returns Integer instance representation of user input. Returns null if user input is invalid.
+    private Integer getIntegerInput() {
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
         try{
-            return Double.parseDouble(input);
+            return Integer.parseInt(input);
         } catch (Exception e) {
             return null;
         }
