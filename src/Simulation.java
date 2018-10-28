@@ -1,88 +1,51 @@
-import java.util.Objects;
-import java.util.Scanner;
-
 public class Simulation {
 
-    private double maximum;
     private VisualAsciiGrid grid;
+    private int xInitial, yInitial, zInitial, xEndPoint, yEndPoint, zEndPoint, maximum;
+    private Line3D line;
+    private Character lineChar;
+    private Boolean answer;
 
     // Constructor
     public Simulation() {
+        grid = new VisualAsciiGrid();
         this.maximum = VisualAsciiGrid.MAX;
     }
 
     // Method Name: run
     // Behaviour:
+    // TODO: fix out of bounds exception in some way ... (if point is outside of VisualAsciiGrid's grid).
     public void run() {
-        Integer input;
-        Boolean answer;
-        int xEndPoint, yEndPoint, zEndPoint;
-        Line3D line;
-        while(true) {
-            System.out.println("Please enter an end-point for a line from the origin ...");
-            input = null;
-            while(input == null) {
-                System.out.print("X: ");
-                input = getIntegerInput();
-                if(input != null && input > this.maximum) {
-                    input = null;
+        boolean running = true;
+        while(running) {
+            while(true) {
+                System.out.println("Enter an initial-point for the line ...");
+                this.xInitial = Input.LoopUntilInputIsInteger("X: ");
+                this.yInitial = Input.LoopUntilInputIsInteger("Y: ");
+                this.zInitial = Input.LoopUntilInputIsInteger("Z: ");
+                System.out.println("Enter an end-point for the line ...");
+                this.xEndPoint = Input.LoopUntilInputIsInteger("X: ");
+                this.yEndPoint = Input.LoopUntilInputIsInteger("Y: ");
+                this.zEndPoint = Input.LoopUntilInputIsInteger("Z: ");
+                line = new Line3D(-1, -1, -1, xEndPoint, yEndPoint, zEndPoint);
+                System.out.print("Enter a character for your line (Will use default character otherwise).\n > ");
+                this.lineChar = Input.getCharacterInput();
+                if(lineChar == null){
+                    grid.applyLine3D(line);
+                } else {
+                    grid.applyLine3D(line, lineChar);
                 }
+                grid.draw();
+                grid.printSolidGridPoints();
+                System.out.println("Would you like to add another line?");
+                answer = Input.LoopUntilYesOrNo(" > ");
+                if(!answer) {break;}
             }
-            xEndPoint = input;
-            input = null;
-            while(input == null) {
-                System.out.print("Y: ");
-                input = getIntegerInput();
-                if(input != null && input > this.maximum) {
-                    input = null;
-                }
-            }
-            yEndPoint = input;
-            input = null;
-            while(input == null) {
-                System.out.print("Z: ");
-                input = getIntegerInput();
-                if(input != null && input > this.maximum) {
-                    input = null;
-                }
-            }
-            zEndPoint = input;
-            grid = new VisualAsciiGrid();
-            line = new Line3D(xEndPoint, yEndPoint, zEndPoint);
-            grid.applyLine3D(line);
-            grid.draw();
+            grid.clear();
             System.out.println("Would you like to try again?");
-            answer = null;
-            while(answer == null) {
-                answer = getYesOrNo();
-                if (answer != null && !answer) {
-                    System.exit(0);
-                }
-            }
+            answer = Input.LoopUntilYesOrNo(" > ");
+            running = (answer)? true : false;
         }
-    }
-
-    // Behaviour:   Returns true if user input was yes. Returns false if user input was no. Returns null otherwise.
-    private Boolean getYesOrNo() {
-        Scanner s = new Scanner(System.in);
-        String input = s.nextLine();
-        if (Objects.equals(input.toUpperCase(), "YES")) {
-            return true;
-        } else if(Objects.equals(input.toUpperCase(), "NO")) {
-            return false;
-        } else {
-            return null;
-        }
-    }
-
-    // Behaviour:   Returns Integer instance representation of user input. Returns null if user input is invalid.
-    private Integer getIntegerInput() {
-        Scanner s = new Scanner(System.in);
-        String input = s.nextLine();
-        try{
-            return Integer.parseInt(input);
-        } catch (Exception e) {
-            return null;
-        }
+        System.exit(0);
     }
 }
